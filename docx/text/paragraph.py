@@ -108,7 +108,7 @@ class Paragraph(Parented):
         comment = new_run.add_comment(text, author, initials, dtime)
 
         return comment
-
+       
 
         
     def reconstruct_paragraph(self ,query_text, begin_run_idx, begin_run_offset, end_run_idx, end_run_offset):

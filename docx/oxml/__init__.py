@@ -276,3 +276,9 @@ register_element_cls('w:footnotes', CT_Footnotes)
 register_element_cls('w:footnote', CT_Footnote)
 register_element_cls('w:footnoteReference', CT_FNR)
 register_element_cls('w:footnoteRef', CT_FootnoteRef)
+
+
+# ===========================================================================
+# custom element class definitions
+from .insert import CT_Ins
+register_element_cls('w:ins', CT_Ins)
