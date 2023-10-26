@@ -35,6 +35,7 @@ class CT_R(BaseOxmlElement):
     cr = ZeroOrMore('w:cr')
     tab = ZeroOrMore('w:tab')
     drawing = ZeroOrMore('w:drawing')
+    dele_t = ZeroOrMore('w:delText')
 
     def _insert_rPr(self, rPr):
         self.insert(0, rPr)
@@ -48,7 +49,14 @@ class CT_R(BaseOxmlElement):
         if len(text.strip()) < len(text):
             t.set(qn('xml:space'), 'preserve')
         return t
-
+    def add_dele_t(self, text):
+        """
+        Return a newly added ``<w:delText>`` element containing *text*.
+        """
+        t = self._add_dele_t(text=text)
+        if len(text.strip()) < len(text):
+            t.set(qn('xml:space'), 'preserve')
+        return t
     def add_drawing(self, inline_or_anchor):
         """
         Return a newly appended ``CT_Drawing`` (``<w:drawing>``) child

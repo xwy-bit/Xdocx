@@ -281,4 +281,6 @@ register_element_cls('w:footnoteRef', CT_FootnoteRef)
 # ===========================================================================
 # custom element class definitions
 from .insert import CT_Ins
+from .delete import CT_Dele
 register_element_cls('w:ins', CT_Ins)
+register_element_cls('w:del', CT_Dele)

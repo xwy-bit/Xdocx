@@ -15,6 +15,7 @@ class CT_P(BaseOxmlElement):
     pPr = ZeroOrOne('w:pPr')
     r = ZeroOrMore('w:r')
     ins = ZeroOrMore('w:ins')
+    dele = ZeroOrMore('w:del')
 
     def _insert_pPr(self, pPr):
         self.insert(0, pPr)
