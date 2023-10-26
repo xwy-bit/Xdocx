@@ -13,6 +13,10 @@ from .parfmt import ParagraphFormat
 from .run import Run
 from ..shared import Parented
 
+
+from docx.text.insert import Insert
+from docx.text.delete import Delete
+
 from datetime import datetime
 import re
 
@@ -109,7 +113,90 @@ class Paragraph(Parented):
 
         return comment
        
+    def add_insert_by_range(self, text, author='Wayen', initials='W', dtime=None ,ins_index = 0):
+        paragraph_text = self.text
 
+        # get run text ranges, e.g. [[0,3],[3,6],[6,9]]
+        run_text_ranges = []
+        text_counter = 0
+        for run in self.runs:
+            run_text_ranges.append([text_counter,len(run.text)+ text_counter])
+            text_counter += len(run.text)
+        
+        if dtime is None:
+            dtime = str( datetime.now() ).replace(' ', 'T')
+
+        if ins_index < 0 or ins_index > len(paragraph_text):
+            raise ValueError('ins_index should be in range of paragraph')
+
+        print('run_text_ranges',run_text_ranges)
+        # if ins_index not in the middle of a run, then insert a new run
+        if ins_index == 0:
+            nins = self._p._new_ins()
+            nins._id = 1
+            nins.author = author
+            nins.date = dtime
+            nins.add_r(text)
+            New_Insert = Insert(nins,self._p)
+            self._p.insert(0,nins)
+        elif ins_index in [run_text_range[1] for run_text_range in run_text_ranges]:
+            run_idx = [run_text_range[1] 
+                       for run_text_range in run_text_ranges].index(ins_index)
+            run = self.runs[run_idx]
+            nins = self._p._new_ins()
+            nins._id = 1
+            nins.author = author
+            nins.date = dtime
+            nins.add_r(text)
+            New_Insert = Insert(nins,self._p)
+            run._r.addnext(nins)
+        # if ins_index in the middle of a run, then split the run
+        else:
+            for idx, run_text_range in enumerate(run_text_ranges):
+                if run_text_range[0] <= ins_index and run_text_range[1] > ins_index:
+                    run_idx = idx
+                    run_offset = ins_index - run_text_range[0]
+                    break
+            # split run
+            anchor_Run = self.runs[run_idx]
+            nrun = self._p._new_r()
+            nrun.text = anchor_Run.text[run_offset:]
+            anchor_Run.text = anchor_Run.text[:run_offset]
+            New_Run = Run(nrun,self._p)
+            nins = self._p._new_ins()
+            nins._id = 1
+            nins.author = author
+            nins.date = dtime
+            nins.add_r(text)
+            New_Insert = Insert(nins,self._p)
+            anchor_Run._r.addnext(nins)
+            nins.addnext(nrun)
+
+            # alian font
+            New_Run.bold = anchor_Run.bold
+            New_Run.italic = anchor_Run.italic
+            New_Run.underline = anchor_Run.underline
+            New_Run.font.name = anchor_Run.font.name
+            New_Run.font.size = anchor_Run.font.size
+            New_Run.font.color.rgb = anchor_Run.font.color.rgb
+
+            New_Insert.bold = anchor_Run.bold
+            New_Insert.italic = anchor_Run.italic
+            New_Insert.underline = anchor_Run.underline
+            New_Insert.font.name = anchor_Run.font.name
+            New_Insert.font.size = anchor_Run.font.size
+            New_Insert.font.color.rgb = anchor_Run.font.color.rgb
+
+
+
+
+
+
+
+
+
+
+        
         
     def reconstruct_paragraph(self ,query_text, begin_run_idx, begin_run_offset, end_run_idx, end_run_offset):
         if begin_run_idx == end_run_idx:

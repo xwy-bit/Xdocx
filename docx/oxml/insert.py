@@ -11,6 +11,7 @@ class CT_Ins(BaseOxmlElement):
     '''
     A ``<w:ins>`` element, a container for Insert properties
     '''
+    rPr = ZeroOrOne('w:rPr')
     _id = RequiredAttribute('w:id', ST_DecimalNumber)
     date = RequiredAttribute('w:date', ST_String)
     author = RequiredAttribute('w:author', ST_String)
