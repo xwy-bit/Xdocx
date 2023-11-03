@@ -79,5 +79,5 @@ for idx , para in enumerate(doc.paragraphs):
     if idx == 8: # find the paragraph you want to end comment
         para._p.pull_overflow_comment(comment_id,rangeEnd=2)
 
-doc.save('path/to/Insert_Demo.docx')
+doc.save('path/to/Comment_Demo.docx')
 ```
