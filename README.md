@@ -64,3 +64,20 @@ for idx , para in enumerate(doc.paragraphs):
 
 doc.save('path/to/Insert_Demo.docx')
 ```
+
+Comment Demo
+
+> this is an navie demo ,not the final version
+
+```python
+import docx
+
+doc = docx.Document('path/to/original.docx')
+for idx , para in enumerate(doc.paragraphs):
+    if idx ==6 : # find the paragraph you want to start comment 
+        comment , comment_id = para._p.add_cross_paragraph_comment_start('Wayen Xu', para.part._comments_part._element, 'WX', '2023-11-03T00:00:00Z', 'THIS IS A TEST COMMENT', 0)
+    if idx == 8: # find the paragraph you want to end comment
+        para._p.pull_overflow_comment(comment_id,rangeEnd=2)
+
+doc.save('path/to/Insert_Demo.docx')
+```
