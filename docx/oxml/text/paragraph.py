@@ -58,7 +58,7 @@ class CT_P(BaseOxmlElement):
             self.insert(rangeEnd, rEnd)
         return rEnd
     
-    def add_cross_paragraph_comment_start(self, author, comment_part, initials, dtime, comment_text, rangeStart, rangeEnd):
+    def add_cross_paragraph_comment_start(self, author, comment_part, initials, dtime, comment_text, rangeStart):
         comment = comment_part.add_comment(author, initials, dtime)
         comment._add_p(comment_text)
         _r = self.add_r()
