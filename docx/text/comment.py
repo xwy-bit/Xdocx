@@ -1,5 +1,6 @@
 from ..shared import Parented
 
+
 class Comment(Parented):
     """[summary]
 
@@ -10,14 +11,7 @@ class Comment(Parented):
         super(Comment, self).__init__(parent)
         self._com = self._element = self.element = com
     
-    @property
-    def paragraph(self):
-        return self.element.paragraph
-    
-    @property
-    def text(self):
-        return self.element.paragraph.text
-    
-    @text.setter
-    def text(self, text):
-        self.element.paragraph.text = text
+    def link_comment(self, _id, rangeStart=0, rangeEnd=0):
+        pass
+    def add_comm(self, author, comment_part, initials, dtime, comment_text, rangeStart, rangeEnd):
+       pass

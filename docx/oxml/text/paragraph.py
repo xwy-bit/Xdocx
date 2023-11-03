@@ -6,7 +6,7 @@ Custom element classes related to paragraphs (CT_P).
 
 from ..ns import qn
 from ..xmlchemy import BaseOxmlElement, OxmlElement, ZeroOrMore, ZeroOrOne
-
+from ..comments import  CT_Com
 
 class CT_P(BaseOxmlElement):
     """
@@ -43,6 +43,30 @@ class CT_P(BaseOxmlElement):
                 self.append(rEnd)
             else:
                 self.insert(rangeEnd+1, rEnd)
+    def push_overflow_comment(self, _id,rangeStart=0):
+        rStart = OxmlElement('w:commentRangeStart')
+        rStart._id = _id
+        self.insert(rangeStart,rStart)
+        return rStart
+    
+    def pull_overflow_comment(self, _id, rangeEnd=0):
+        rEnd = OxmlElement('w:commentRangeEnd')
+        rEnd._id = _id
+        if rangeEnd == 0:
+            self.append(rEnd)
+        else:
+            self.insert(rangeEnd, rEnd)
+        return rEnd
+    
+    def add_cross_paragraph_comment_start(self, author, comment_part, initials, dtime, comment_text, rangeStart, rangeEnd):
+        comment = comment_part.add_comment(author, initials, dtime)
+        comment._add_p(comment_text)
+        _r = self.add_r()
+        _r.add_comment_reference(comment._id)
+        self.push_overflow_comment(comment._id, rangeStart= rangeStart)
+        return comment ,comment._id
+    
+
 
     def add_comm(self, author, comment_part, initials, dtime, comment_text, rangeStart, rangeEnd):
         
