@@ -186,10 +186,10 @@ class Paragraph(Parented):
             New_Insert.font.size = anchor_Run.font.size
             New_Insert.font.color.rgb = anchor_Run.font.color.rgb
 
-    def add_cross_paragraph_comment_start_by_textidx(self, author, para, initials, dtime, comment_text, text_idx):
+    def add_cross_paragraph_comment_start_by_textidx(self, author, initials, dtime, comment_text, text_idx):
         run_text_ranges = []
         text_counter = 0
-        comment_part = para.part._comments_part._element
+        comment_part = self.part._comments_part._element
         for run in self.runs:
             run_text_ranges.append([text_counter,len(run.text)+ text_counter])
             text_counter += len(run.text)
