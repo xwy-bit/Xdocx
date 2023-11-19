@@ -71,8 +71,7 @@ class Paragraph(Parented):
 
         query_text_range = [self.text.index(query_text)
                             ,self.text.index(query_text)+len(query_text)] 
-        print(query_text_range)
-        print(run_text_ranges)
+
         begin_run_idx = -1
         begin_run_offset = 0
         end_run_idx = -1
@@ -187,9 +186,57 @@ class Paragraph(Parented):
             New_Insert.font.size = anchor_Run.font.size
             New_Insert.font.color.rgb = anchor_Run.font.color.rgb
 
+    def add_cross_paragraph_comment_start_by_textidx(self, author, para, initials, dtime, comment_text, text_idx):
+        run_text_ranges = []
+        text_counter = 0
+        comment_part = para.part._comments_part._element
+        for run in self.runs:
+            run_text_ranges.append([text_counter,len(run.text)+ text_counter])
+            text_counter += len(run.text)
+        # split run by text_idx
+        for idx , run_text_range in enumerate(run_text_ranges):
+            if text_idx >= run_text_range[0] and text_idx < run_text_range[1]:
+                run_idx = idx
+                break
+        run = self.runs[run_idx]
+        run_text = run.text
+        run_text_idx = text_idx - run_text_range[0]
+        run_text_splited = [run_text[:run_text_idx],run_text[run_text_idx:]]
+        run.text = run_text_splited[0]
+        nrun = self._element._new_r()
+        run._r.addnext(nrun)
+        nrun.text = run_text_splited[1]
 
+        comment = comment_part.add_comment(author, initials, dtime)
+        comment._add_p(comment_text)
+        _r = self._element.add_r()
+        _r.add_comment_reference(comment._id)
+        self._p.push_overflow_comment(comment._id, rangeStart= run_idx+2)   
+        return comment ,comment._id
 
+    def add_cross_paragraph_comment_end_by_textidx(self,comment_id,text_idx):
+        run_text_ranges = []
+        text_counter = 0
+        for run in self.runs:
+            run_text_ranges.append([text_counter,len(run.text)+ text_counter])
+            text_counter += len(run.text)
+        # split run by text_idx
+        for idx , run_text_range in enumerate(run_text_ranges):
+            if text_idx >= run_text_range[0] and text_idx < run_text_range[1]:
+                run_idx = idx
+                break
+        run = self.runs[run_idx]
+        run_text = run.text
+        run_text_idx = text_idx - run_text_range[0]
+        run_text_splited = [run_text[:run_text_idx],run_text[run_text_idx:]]
+        run.text = run_text_splited[0]
+        nrun = self._element._new_r()
+        run._r.addnext(nrun)
+        nrun.text = run_text_splited[1]
 
+        self._p.pull_overflow_comment(comment_id, rangeEnd= run_idx+1)   
+        return comment_id
+        
 
 
 

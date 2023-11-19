@@ -66,8 +66,6 @@ class CT_P(BaseOxmlElement):
         self.push_overflow_comment(comment._id, rangeStart= rangeStart)
         return comment ,comment._id
     
-
-
     def add_comm(self, author, comment_part, initials, dtime, comment_text, rangeStart, rangeEnd):
         
         comment = comment_part.add_comment(author, initials, dtime)
