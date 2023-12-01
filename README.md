@@ -80,3 +80,11 @@ INPUT:
     @ Charactor Index
 ```
 
+
+```
+comment , comment_id = doc.paragraphs[6].\
+    add_cross_paragraph_comment_start_by_textidx(
+        'Wayen Xu',
+        'WX', '2024-01-01T00:00:00Z', 'This is a comment,hahaha', 15)
+doc.paragraphs[8].add_cross_paragraph_comment_end_by_textidx(comment_id,3)
+```
