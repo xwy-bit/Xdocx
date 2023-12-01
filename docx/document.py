@@ -95,6 +95,40 @@ class Document(ElementProxy):
         table.style = style
         return table
 
+    def add_comment(self, author, initials, date,query_text,comment_text):
+        """
+        add comment by range or by text
+        """
+        full_text  = "".join([para.text for para in self.paragraphs])
+        text_splited_by_para = [para.text for para in self.paragraphs]
+        # 
+        text_range_in_para = []
+        text_begin_idx = 0
+        text_end_idx = 0
+        for text_idx , text in enumerate(text_splited_by_para):
+            text_begin_idx = text_end_idx 
+            text_end_idx = len(text) + text_begin_idx
+            text_range_in_para.append([
+                text_begin_idx,text_end_idx
+            ])
+        
+        if query_text not in full_text:
+            raise IndexError
+        else:
+            text_begin_idx = full_text.find(query_text)
+            text_end_idx = full_text.find(query_text) + len(query_text)
+        for idx , text_range in enumerate(text_range_in_para):
+            if text_begin_idx >= text_range[0] and text_begin_idx < text_range[1]:
+                para_begin_idx = idx
+            if text_end_idx >= text_range[0] and text_end_idx < text_range[1]:
+                para_end_idx = idx
+        para_begin = self.paragraphs[para_begin_idx]
+        para_end = self.paragraphs[para_end_idx]
+        comment, comment_id = para_begin._p.add_cross_paragraph_comment_start(author, para_begin.part._comments_part._element, initials, date, comment_text, text_begin_idx)
+        para_end._p.pull_overflow_comment(comment_id,rangeEnd=text_end_idx)
+
+        
+        
     @property
     def core_properties(self):
         """
